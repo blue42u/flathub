@@ -1,0 +1,73 @@
+{
+  "$schema": "https://raw.githubusercontent.com/flatpak/flatpak-builder/main/data/flatpak-manifest.schema.json",
+  "id": "org.hpctoolkit.hpcviewer",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "25.08",
+  "sdk": "org.freedesktop.Sdk",
+  "modules": [
+    {
+      "name": "hpcviewer",
+      "buildsystem": "simple",
+      "sources": [
+        {
+          "type": "archive",
+          "dest": "bundle/",
+          "only-arches": ["x86_64"],
+          "url": "https://gitlab.com/hpctoolkit/hpcviewer/-/jobs/14010252002/artifacts/raw/edu.rice.cs.hpcviewer.product/target/products/edu.rice.cs.hpcviewer-linux.gtk.x86_64.tar.gz",
+          "sha256": "2e0e47f9f496afc2052a8d3879220c1854eb72dfb65ed50708211e2c39ec869b",
+          "strip-components": 0,
+          "x-checker-data": {
+            "is-main-source": true,
+            "type": "json",
+            "url": "https://gitlab.com/api/v4/projects/hpctoolkit%2Fhpcviewer/releases/permalink/latest",
+            "version-query": ".tag_name",
+            "url-query": ".assets.links[] | select(.url|endswith(\"/hpcviewer-linux.gtk.x86_64.tar.gz\")) | .direct_asset_url",
+            "timestamp-query": ".released_at",
+            "release-url-template": "https://gitlab.com/hpctoolkit/hpcviewer/-/releases/$version"
+          }
+        },
+        {
+          "type": "archive",
+          "dest": "bundle/",
+          "only-arches": ["aarch64"],
+          "url": "https://gitlab.com/hpctoolkit/hpcviewer/-/jobs/14010252002/artifacts/raw/edu.rice.cs.hpcviewer.product/target/products/edu.rice.cs.hpcviewer-linux.gtk.aarch64.tar.gz",
+          "sha256": "03df9de04f754d801eb737443016005405ba168a69ce1f467d7a71b6f78a3051",
+          "strip-components": 0,
+          "x-checker-data": {
+            "is-main-source": true,
+            "type": "json",
+            "url": "https://gitlab.com/api/v4/projects/hpctoolkit%2Fhpcviewer/releases/permalink/latest",
+            "version-query": ".tag_name",
+            "url-query": ".assets.links[] | select(.url|endswith(\"/hpcviewer-linux.gtk.aarch64.tar.gz\")) | .direct_asset_url",
+            "timestamp-query": ".released_at",
+            "release-url-template": "https://gitlab.com/hpctoolkit/hpcviewer/-/releases/$version"
+          }
+        }
+      ],
+      "build-commands": [
+        "install -d ${FLATPAK_DEST}/opt/ ${FLATPAK_DEST}/bin/",
+        "install -Dm0644 bundle/hpcviewer.metainfo.xml ${FLATPAK_DEST}/share/metainfo/org.hpctoolkit.hpcviewer.metainfo.xml",
+        "install -Dm0644 bundle/hpcviewer.desktop ${FLATPAK_DEST}/share/applications/org.hpctoolkit.hpcviewer.desktop",
+        "install -Dm0644 bundle/hpcviewer.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/org.hpctoolkit.hpcviewer.svg",
+        "mv -T bundle/ ${FLATPAK_DEST}/opt/hpcviewer/",
+        "ln -s ../opt/hpcviewer/hpcviewer ${FLATPAK_DEST}/bin/hpcviewer"
+      ]
+    }
+  ],
+  "command": "hpcviewer",
+  "build-options": {
+    "no-debuginfo": true,
+    "no-debuginfo-compression": true
+  },
+  "finish-args": [
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--share=ipc",
+    "--device=dri",
+    "--share=network",
+    "--socket=ssh-auth",
+    "--filesystem=~/.ssh:ro",
+    "--persist=.hpctoolkit",
+    "--persist=.eclipse"
+  ]
+}
